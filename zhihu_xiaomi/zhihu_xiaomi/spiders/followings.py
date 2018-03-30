@@ -19,7 +19,7 @@ class FollowingsSpider(Spider):
     follows_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge[?(type=best_answerer)].topics'
 
     def start_requests(self):
-        for post in self.posts.find().limit(6):
+        for post in self.posts.find().limit(2000):
             url_token = post['url_token']
             yield Request(self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
                           self.parse_follows)
@@ -50,7 +50,3 @@ class FollowingsSpider(Spider):
         print(slug)
         print(results.get('data')[2].get('url_token'))
 
-
-
-    def parse(self, response):
-        pass
