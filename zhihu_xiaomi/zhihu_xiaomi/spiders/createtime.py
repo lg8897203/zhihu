@@ -11,7 +11,6 @@ class FollowingSpider(Spider):
     name = "createtime"
     allowed_domains = ["www.zhihu.com"]
 
-    moclient = MongoClient ()
     moclient = MongoClient ('localhost', 27017)
     #moclient = MongoClient ('192.168.7.16', 27017)
     db = moclient.zhihuliker1
@@ -20,12 +19,6 @@ class FollowingSpider(Spider):
 
     url = 'https://www.zhihu.com/api/v4/members/{user}/activities?limit=5'
     url2 = 'https://www.zhihu.com/api/v4/members/{user}/activities?limit=20&after_id={after_id}&desktop=True'
-    url3 = 'https://www.zhihu.com/api/v4/members/kumakuma-47/activities?limit=5'
-
-    meta = {
-        'dont_redirect': True,  # 禁止网页重定向
-        'handle_httpstatus_list': [301, 302]  # 对哪些异常返回进行处理
-    }
 
     def start_requests(self):
         for post in self.posts.find(no_cursor_timeout=True):
@@ -43,19 +36,18 @@ class FollowingSpider(Spider):
         if 'data' in results.keys():
             for result in results.get('data'):
                 type = result.get('verb')
-                hash = result.get('actor').get('id')
+                id = result.get('actor').get('id')
                 target_id = result.get('target').get('id')
+                target_time = result.get('target').get('created_time')
                 created_time = result.get ('created_time')
-                print(type)
-                print(target_id)
-                if type == 'ANSWER_VOTE_UP' and target_id == 349117484:
+                if type == 'ANSWER_VOTE_UP' and target_id == target_id:
 
                     print('I gotcha!!!')
-                    self.db.users.update({'hash': hash}, {"$set": {"created_time": created_time}})
+                    self.db.users.update({'id': id}, {"$set": {"created_time": created_time}})
                     signal = False
                     break
 
-                if created_time < 1489324248:
+                if created_time < target_time:
                     print('wo de cuo?')
                     signal = False
                     break
