@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 24
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -63,7 +63,7 @@ DOWNLOADER_MIDDLEWARES = {
     #'zhihu_xiaomi.middlewares.RandomUserAgent': 1,
     #'zhihu_xiaomi.middlewares.ProxyMiddleware': 543,
     #'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 543,
-    #'zhihu_xiaomi.middlewares.ProxyMiddleware': 125,
+    'zhihu_xiaomi.middlewares.ProxyMiddleware': 125,
 	'zhihu_xiaomi.middlewares.UserAgentmiddleware': 400,
 }
 

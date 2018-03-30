@@ -11,11 +11,11 @@ import base64
 from zhihu_xiaomi.settings import USER_AGENTS
 
 # 代理服务器
-proxyServer = "http://http-dyn.abuyun.com:9020"
+proxyServer = "http://http-cla.abuyun.com:9030"
 
 # 代理隧道验证信息
-proxyUser = "HGK5WJ00M520Y68D"
-proxyPass = "D6DE036A8BA046BF"
+proxyUser = "HV2352L5L168586C"
+proxyPass = "4D3A176BADD30352"
 
 # for Python2
 #proxyAuth = "Basic " + base64.b64encode(proxyUser + ":" + proxyPass)
