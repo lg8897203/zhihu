@@ -11,7 +11,7 @@ class FollowingsSpider(Spider):
     moclient = MongoClient()
     moclient = MongoClient ('localhost', 27017)
     #moclient = MongoClient('192.168.7.16', 27017)
-    db = moclient.zhihu_xiaomi
+    db = moclient.zhihu_maoyizhan
     db.collection_names(include_system_collections=False)
     posts = db.users
 
