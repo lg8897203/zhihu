@@ -21,11 +21,11 @@ class FollowingSpider(Spider):
     url2 = 'https://www.zhihu.com/api/v4/members/{user}/activities?limit=20&after_id={after_id}&desktop=True'
 
     def start_requests(self):
-        for post in self.posts.find().limit(2):
+        for post in self.posts.find(no_cursor_timeout=True):
             name = post['url_token']
             yield Request(self.url.format(user=name),
                    self.parse_follows,dont_filter = True)
-        #self.posts.close()
+        self.posts.close()
         #yield Request(self.url3 , self.parse_follows, dont_filter=True)
 
     def parse_follows(self, response):
