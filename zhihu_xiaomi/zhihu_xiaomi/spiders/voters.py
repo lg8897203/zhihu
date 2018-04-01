@@ -11,14 +11,19 @@ class AnswersSpider(Spider):
     #moclient = MongoClient ()
     #moclient = MongoClient ('192.168.7.16', 27017)
     moclient = MongoClient ('localhost', 27017)
-    db = moclient.zhihu_maoyizhan
+    db = moclient.iphonex
     db.collection_names (include_system_collections=False)
-    posts = db.voters
-    aid = '349117484'
+    posts = db.answers
 
     def start_requests(self):
-        yield Request(self.voter_url.format(aid=self.aid, limit=10, offset=0),
-                      self.voter_parse)
+        for post in self.posts.find(no_cursor_timeout=True):
+            aid = post['id']
+            voteup_count = post['voteup_count']
+            if voteup_count > 0:
+                yield Request(self.voter_url.format(aid=aid, limit=10, offset=0),
+                          self.parse)
+        self.posts.close()
+
         # for post in self.posts.find():
         #     aid = post['aid']
         #     voteup_count = post['voteup_count']
@@ -27,10 +32,16 @@ class AnswersSpider(Spider):
         #         yield Request(self.voter_url.format(aid=aid, limit=10, offset=0),
         #                       self.voter_parse)
 
-    def voter_parse(self, response):
+    def parse(self, response):
         results = json.loads(response.text)
-        self.db.voters.insert(results['data'])
+        aid = results.get('paging').get('previous').split('/')[6]
+        a = []
+        if 'data' in results.keys():
+            for result in results.get('data'):
+                uid = result.get('id')
+                a.append(uid)
+            self.db.answers.update({'id': int(aid)}, {"$pushAll": {"voters": a}})
 
         if 'paging' in results.keys() and results.get('paging').get('is_end') == False:
             next_page = results.get('paging').get('next')
-            yield Request(next_page, self.voter_parse)
+            yield Request(next_page, self.parse)

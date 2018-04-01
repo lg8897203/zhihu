@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
 from scrapy import Spider, Request, FormRequest
-from zhihu_xiaomi.items import UserItem
 from pymongo import MongoClient
 
 
-class UsersInfoSpider(Spider):
-    name = 'users_maoyizhan'
+class UsersInfoVotersSpider(Spider):
+    name = 'user_info_voters'
     allowed_domains = ['www.zhihu.com']
     start_urls = ['http://www.zhihu.com/']
     user_url = 'https://www.zhihu.com/api/v4/members/{uid}?include={include}'
@@ -18,23 +17,24 @@ class UsersInfoSpider(Spider):
     moclient = MongoClient ('localhost', 27017)
     db = moclient.iphonex
     db.collection_names (include_system_collections=False)
-    posts = db.voters
+    posts = db.answers
 
     def start_requests(self):
         for post in self.posts.find(no_cursor_timeout=True):
-            uid = post['id']
-            yield Request(self.user_url.format(uid=uid, include=self.query2), self.parse_user)
+            voters = post['voters']
+            for people in voters:
+                yield Request(self.user_url.format(uid=people, include=self.query2), self.parse_user)
         self.posts.close()
 
     def parse_user(self,response):
         results = json.loads(response.text)
-
-        if 'data' in results.keys():
+        if 'id' in results.keys():
             id = results['id']
-            if self.users.find_one({"id": id}):
+
+            if self.db.voters.find_one({"id": id}):
                 print("这个ID有了！")
             else:
-                self.db.users.insert(results)
+                self.db.voters.insert(results)
 
     def parse(self, response):
         pass

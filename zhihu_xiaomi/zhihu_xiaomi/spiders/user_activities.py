@@ -7,15 +7,16 @@ from scrapy import Spider, Request
 
 from pymongo import MongoClient
 
-class FollowingSpider(Spider):
-    name = "createtime"
-    allowed_domains = ["www.zhihu.com"]
+
+class UserActivitiesSpider(Spider):
+    name = 'user_activities'
+    allowed_domains = ['www.zhihu.com']
 
     moclient = MongoClient ('localhost', 27017)
     #moclient = MongoClient ('192.168.7.16', 27017)
-    db = moclient.iphonex
+    db = moclient.zhihu_maoyizhan
     db.collection_names (include_system_collections=False)
-    posts = db.voters
+    posts = db.users
 
     url = 'https://www.zhihu.com/api/v4/members/{user}/activities?limit=7'
     url2 = 'https://www.zhihu.com/api/v4/members/{user}/activities?limit=20&after_id={after_id}&desktop=True'
@@ -43,7 +44,7 @@ class FollowingSpider(Spider):
                 if type == 'ANSWER_VOTE_UP' and target_id == target_id:
 
                     print('I gotcha!!!')
-                    self.db.voters.update({'id': id}, {"$set": {"created_time": created_time}})
+                    self.db.users.update({'id': id}, {"$set": {"created_time": created_time}})
                     signal = False
                     break
 

@@ -106,7 +106,7 @@ MONGO_URI = 'localhost'
 #office
 #MONGO_URI = '192.168.7.16'
 #MONGO_DATABASE = 'zhihu_huawei'
-MONGO_DATABASE = 'zhihu_maoyizhan'
+MONGO_DATABASE = 'iphonex'
 
 
 USER_AGENTS = [

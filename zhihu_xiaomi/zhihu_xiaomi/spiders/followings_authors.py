@@ -3,26 +3,26 @@ import json
 from scrapy import Spider, Request
 from pymongo import MongoClient
 
-class FollowingsSpider(Spider):
-    name = 'followings'
+class FollowingsAuthorsSpider(Spider):
+    name = 'followings_authors'
     allowed_domains = ['www.zhihu.com']
     start_urls = ['http://www.zhihu.com/']
 
-    moclient = MongoClient()
     moclient = MongoClient ('localhost', 27017)
     #moclient = MongoClient('192.168.7.16', 27017)
-    db = moclient.zhihu_maoyizhan
+    db = moclient.iphonex
     db.collection_names(include_system_collections=False)
-    posts = db.users
+    posts = db.authors
 
     follows_url = 'https://www.zhihu.com/api/v4/members/{user}/followees?include={include}&offset={offset}&limit={limit}'
-    follows_query = 'data[*].answer_count,articles_count,gender,follower_count,is_followed,is_following,badge[?(type=best_answerer)].topics'
+    follows_query = 'data%5B*%5D.answer_count%2Carticles_count%2Cgender%2Cfollower_count%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics'
 
     def start_requests(self):
-        for post in self.posts.find():
+        for post in self.posts.find(no_cursor_timeout=True):
             url_token = post['url_token']
             yield Request(self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
                           self.parse_follows)
+        self.posts.close()
 
     def parse_follows(self, response):
         results = json.loads(response.text)
@@ -34,7 +34,7 @@ class FollowingsSpider(Spider):
                 id = result.get('id')
                 a.append(id)
 
-            self.db.users.update({'url_token': slug}, {"$pushAll": {"followings": a}})
+            self.db.authors.update({'url_token': slug}, {"$pushAll": {"followings": a}})
 
 
         if 'paging' in results.keys() and results.get('paging').get('is_end') == False:
