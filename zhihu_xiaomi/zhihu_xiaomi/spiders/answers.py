@@ -27,7 +27,7 @@ class AnswersSpider(Spider):
         #         yield Request(self.answer_url.format(qid=qid, limit=20, offset=0),
         #                  self.parse)
         for post in self.posts.find(no_cursor_timeout=True):
-            qid = post['target']['question']['id']
+            qid = post['target']['id']
             yield Request(self.answer_url.format(qid=qid, limit=20, offset=0),
                              self.parse)
         self.posts.close()
