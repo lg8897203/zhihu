@@ -27,7 +27,7 @@ class ZhihuSpider(Spider):
     def parse(self, response):
         results = json.loads(response.text)
 
-        if 'data' in results.keys():
+        if results['data']:
             self.db.questions.insert(results['data'])
 
         if 'paging' in results.keys() and results.get('paging').get('is_end') == False:
