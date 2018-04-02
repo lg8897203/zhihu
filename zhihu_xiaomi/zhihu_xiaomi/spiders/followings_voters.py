@@ -18,11 +18,12 @@ class FollowingsVotersSpider(Spider):
     follows_query = 'data%5B*%5D.answer_count%2Carticles_count%2Cgender%2Cfollower_count%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics'
 
     def start_requests(self):
-        for post in self.posts.find(no_cursor_timeout=True):
+        demos = self.posts.find(no_cursor_timeout=True)
+        for post in demos:
             url_token = post['url_token']
             yield Request(self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
                           self.parse_follows)
-        self.posts.close()
+        demos.close()
 
     def parse_follows(self, response):
         results = json.loads(response.text)

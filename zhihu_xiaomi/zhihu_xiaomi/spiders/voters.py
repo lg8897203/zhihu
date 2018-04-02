@@ -16,13 +16,14 @@ class AnswersSpider(Spider):
     posts = db.answers
 
     def start_requests(self):
-        for post in self.posts.find(no_cursor_timeout=True):
+        demos = self.posts.find(no_cursor_timeout=True)
+        for post in demos:
             aid = post['id']
             voteup_count = post['voteup_count']
             if voteup_count > 0:
                 yield Request(self.voter_url.format(aid=aid, limit=10, offset=0),
                           self.parse)
-        self.posts.close()
+        demos.close()
 
         # for post in self.posts.find():
         #     aid = post['aid']

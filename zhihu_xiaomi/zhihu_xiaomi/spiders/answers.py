@@ -26,16 +26,18 @@ class AnswersSpider(Spider):
         #         qid = post['qid']
         #         yield Request(self.answer_url.format(qid=qid, limit=20, offset=0),
         #                  self.parse)
-        for post in self.posts.find(no_cursor_timeout=True):
+        demos = self.posts.find(no_cursor_timeout=True)
+        for post in demos:
             qid = post['target']['id']
-            yield Request(self.answer_url.format(qid=qid, limit=20, offset=0),
+            yield Request(self.answer_url.format(qid=qid, limit=5, offset=0),
                              self.parse)
-        self.posts.close()
+        print('mongodb search finished!')
+        demos.close()
 
     def parse(self, response):
         results = json.loads(response.text)
 
-        if 'data' in results.keys():
+        if results['data']:
             self.db.answers.insert(results['data'])
 
 

@@ -20,10 +20,11 @@ class UsersInfoAuthorsSpider(Spider):
     posts = db.answers
 
     def start_requests(self):
-        for post in self.posts.find(no_cursor_timeout=True):
+        demos = self.posts.find(no_cursor_timeout=True)
+        for post in demos:
             author = post['author']['id']
             yield Request(self.user_url.format(uid=author, include=self.query2), self.parse_user)
-        self.posts.close()
+        demos.close()
 
     def parse_user(self,response):
         results = json.loads(response.text)

@@ -20,11 +20,12 @@ class UsersInfoVotersSpider(Spider):
     posts = db.answers
 
     def start_requests(self):
-        for post in self.posts.find(no_cursor_timeout=True):
+        demos = self.posts.find(no_cursor_timeout=True)
+        for post in demos:
             voters = post['voters']
             for people in voters:
                 yield Request(self.user_url.format(uid=people, include=self.query2), self.parse_user)
-        self.posts.close()
+        demos.close()
 
     def parse_user(self,response):
         results = json.loads(response.text)
