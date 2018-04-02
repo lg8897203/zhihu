@@ -25,6 +25,7 @@ class UsersInfoVotersSpider(Spider):
             voters = post['voters']
             for people in voters:
                 yield Request(self.user_url.format(uid=people, include=self.query2), self.parse_user)
+        print('mongodb search finished!')
         demos.close()
 
     def parse_user(self,response):

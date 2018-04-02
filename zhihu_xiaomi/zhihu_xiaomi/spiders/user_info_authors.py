@@ -24,6 +24,7 @@ class UsersInfoAuthorsSpider(Spider):
         for post in demos:
             author = post['author']['id']
             yield Request(self.user_url.format(uid=author, include=self.query2), self.parse_user)
+        print('mongodb search finished!')
         demos.close()
 
     def parse_user(self,response):

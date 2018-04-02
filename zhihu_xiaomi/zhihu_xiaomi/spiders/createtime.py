@@ -26,6 +26,7 @@ class FollowingSpider(Spider):
             name = post['url_token']
             yield Request(self.url.format(user=name),
                    self.parse_follows,dont_filter = True)
+        print('mongodb search finished!')
         demos.close()
         #yield Request(self.url3 , self.parse_follows, dont_filter=True)
 

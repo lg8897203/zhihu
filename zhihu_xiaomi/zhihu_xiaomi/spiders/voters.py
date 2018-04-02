@@ -23,6 +23,7 @@ class AnswersSpider(Spider):
             if voteup_count > 0:
                 yield Request(self.voter_url.format(aid=aid, limit=10, offset=0),
                           self.parse)
+        print('mongodb search finished!')
         demos.close()
 
         # for post in self.posts.find():

@@ -23,6 +23,7 @@ class FollowingsVotersSpider(Spider):
             url_token = post['url_token']
             yield Request(self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
                           self.parse_follows)
+        print('mongodb search finished!')
         demos.close()
 
     def parse_follows(self, response):
