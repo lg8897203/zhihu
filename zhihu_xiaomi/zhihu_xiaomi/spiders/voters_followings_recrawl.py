@@ -3,8 +3,9 @@ import json
 from scrapy import Spider, Request
 from pymongo import MongoClient
 
-class FollowingsVotersSpider(Spider):
-    name = 'followings_voters'
+
+class VotersFollowingsRecrawlSpider(Spider):
+    name = 'voters_followings_recrawl'
     allowed_domains = ['www.zhihu.com']
     start_urls = ['http://www.zhihu.com/']
 
@@ -18,11 +19,36 @@ class FollowingsVotersSpider(Spider):
     follows_query = 'data%5B*%5D.answer_count%2Carticles_count%2Cgender%2Cfollower_count%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics'
 
     def start_requests(self):
-        demos = self.posts.find(no_cursor_timeout=True).limit(10000).skip(170000)
+        demos = self.posts.find(no_cursor_timeout=True).skip(210000)
+
         for post in demos:
             url_token = post['url_token']
-            yield Request(self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
-                          self.parse_follows)
+            following_count = post['following_count']
+            if following_count == 0 :
+                if 'followings' in post.keys():
+                    pass
+                else:
+                    self.db.voters.update({'url_token': url_token}, {"$pushAll": {"followings": []}})
+
+            else:
+                if 'followings' in post.keys():
+
+                    result = len(post['followings'])
+                    if (following_count - result) > 19:
+                        print('继续爬!!')
+                        yield Request(
+                            self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=result),
+                            self.parse_follows)
+                else:
+                    print(url_token)
+                    print('没有？')
+                    #self.db.users_test.update({'url_token': url_token}, {"$pushAll": {"followings": []}})
+                    yield Request(
+                        self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
+                        self.parse_follows)
+
+            #yield Request(self.follows_url.format(user=url_token, include=self.follows_query, limit=20, offset=0),
+            #             self.parse_follows)
         print('mongodb search finished!')
         demos.close()
 
@@ -47,8 +73,5 @@ class FollowingsVotersSpider(Spider):
 
 
     def parse(self,response):
-        results = json.loads (response.text)
-        slug = results.get ('paging').get ('previous').split ('/')[6]
-        print(slug)
-        print(results.get('data')[2].get('url_token'))
+        pass
 
