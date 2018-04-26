@@ -8,9 +8,9 @@ class CommentsSpider(Spider):
     allowed_domains = ['www.zhihu.com']
     answer_url = 'https://www.zhihu.com/api/v4/answers/{aid}/comments?include=data%5B*%5D.author%2Ccollapsed%2Creply_to_author%2Cdisliked%2Ccontent%2Cvoting%2Cvote_count%2Cis_parent_author%2Cis_author&order=normal&limit={limit}&offset={offset}&status=open'
 
-    moclient = MongoClient ()
-    #moclient = MongoClient ('192.168.7.16', 27017)
-    moclient = MongoClient ('localhost', 27017)
+    #moclient = MongoClient ()
+    moclient = MongoClient ('192.168.7.16', 27017)
+    #moclient = MongoClient ('localhost', 27017)
     db = moclient.zhihu_xiaomi
     db.collection_names (include_system_collections=False)
     posts = db.answers

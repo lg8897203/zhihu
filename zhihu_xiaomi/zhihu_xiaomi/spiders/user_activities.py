@@ -12,8 +12,8 @@ class UserActivitiesSpider(Spider):
     name = 'user_activities'
     allowed_domains = ['www.zhihu.com']
 
-    moclient = MongoClient ('localhost', 27017)
-    #moclient = MongoClient ('192.168.7.16', 27017)
+    #moclient = MongoClient ('localhost', 27017)
+    moclient = MongoClient ('192.168.7.16', 27017)
     db = moclient.zhihu_maoyizhan
     db.collection_names (include_system_collections=False)
     posts = db.users

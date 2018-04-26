@@ -8,8 +8,8 @@ class FollowingsAuthorsSpider(Spider):
     allowed_domains = ['www.zhihu.com']
     start_urls = ['http://www.zhihu.com/']
 
-    moclient = MongoClient ('localhost', 27017)
-    #moclient = MongoClient('192.168.7.16', 27017)
+    #moclient = MongoClient ('localhost', 27017)
+    moclient = MongoClient('192.168.7.16', 27017)
     db = moclient.iphonex
     db.collection_names(include_system_collections=False)
     posts = db.authors

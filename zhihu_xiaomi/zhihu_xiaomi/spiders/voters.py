@@ -9,8 +9,8 @@ class AnswersSpider(Spider):
     allowed_domains = ['www.zhihu.com']
     voter_url = 'https://www.zhihu.com/api/v4/answers/{aid}/voters?include=data%5B*%5D.answer_count%2Carticles_count%2Cfollower_count%2Cgender%2Cis_followed%2Cis_following%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics&offset={offset}&limit={limit}'
     #moclient = MongoClient ()
-    #moclient = MongoClient ('192.168.7.16', 27017)
-    moclient = MongoClient ('localhost', 27017)
+    moclient = MongoClient ('192.168.7.16', 27017)
+    #moclient = MongoClient ('localhost', 27017)
     db = moclient.iphonex
     db.collection_names (include_system_collections=False)
     posts = db.answers

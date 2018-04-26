@@ -9,8 +9,8 @@ class AnswersSpider(Spider):
     name = 'answers'
     allowed_domains = ['www.zhihu.com']
     answer_url = 'https://www.zhihu.com/api/v4/questions/{qid}/answers?include=data%5B*%5D.is_normal%2Cis_collapsed%2Cannotation_action%2Cannotation_detail%2Ccollapse_reason%2Cis_sticky%2Ccollapsed_by%2Csuggest_edit%2Ccomment_count%2Ccan_comment%2Ccontent%2Ceditable_content%2Cvoteup_count%2Creshipment_settings%2Ccomment_permission%2Cmark_infos%2Ccreated_time%2Cupdated_time%2Creview_info%2Crelationship.is_authorized%2Cis_author%2Cvoting%2Cis_thanked%2Cis_nothelp%2Cupvoted_followees%3Bdata%5B*%5D.author.follower_count%2Cbadge%5B%3F(type%3Dbest_answerer)%5D.topics&offset={offset}&limit={limit}&sort_by=default'
-    #moclient = MongoClient ('192.168.7.16', 27017)
-    moclient = MongoClient ('localhost', 27017)
+    moclient = MongoClient ('192.168.7.16', 27017)
+    #moclient = MongoClient ('localhost', 27017)
     db = moclient.iphonex
     db.collection_names (include_system_collections=False)
     posts = db.questions
