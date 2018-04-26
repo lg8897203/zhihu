@@ -15,8 +15,8 @@ class ZhihuSpider(Spider):
     tid = '20095029'
 
     moclient = MongoClient ()
-    #moclient = MongoClient ('192.168.7.16', 27017)
-    moclient = MongoClient ('localhost', 27017)
+    moclient = MongoClient ('192.168.7.16', 27017)
+    #moclient = MongoClient ('localhost', 27017)
     db = moclient.iphonex
     db.collection_names (include_system_collections=False)
 
