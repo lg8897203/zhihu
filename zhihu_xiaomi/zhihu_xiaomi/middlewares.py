@@ -11,7 +11,7 @@ import base64
 from zhihu_xiaomi.settings import USER_AGENTS
 
 # 代理服务器
-proxyServer = "http://http-cla.abuyun.com:9020"
+proxyServer = "http://http-dyn.abuyun.com:9020"
 
 # 代理隧道验证信息
 proxyUser = "HGK5WJ00M520Y68D"
