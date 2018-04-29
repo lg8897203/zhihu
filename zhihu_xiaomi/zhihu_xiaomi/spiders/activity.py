@@ -27,7 +27,7 @@ class ActivitySpider(Spider):
 
             url_token = post['user_url_token']
 
-            yield Request(self.url2.format(user = url_token , after_id = 1522658330), meta={'url_token': url_token}, callback=self.parse_activities ,dont_filter = True)
+            yield Request(self.url2.format(user = url_token , after_id = 1522658430), meta={'url_token': url_token}, callback=self.parse_activities ,dont_filter = True)
         demos.close()
 
     def parse_activities(self, response):
@@ -58,6 +58,15 @@ class ActivitySpider(Spider):
             next_page = results.get('paging').get('next')
             if time > 1500613200:
                 yield Request(next_page, meta={'url_token': url_token}, callback=self.parse_activities)
+                
+           else:
+                print(url_token, 'finished!')
+                self.activities.update({'user_url_token': url_token}, {"$set": {'finished': '1'}})
+
+        else:
+            print(url_token, 'finished!')
+            self.activities.update({'user_url_token': url_token}, {"$set": {'finished': '1'}})
+
 
     def parse(self, response):
         pass
